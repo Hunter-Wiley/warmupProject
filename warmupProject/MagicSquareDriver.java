@@ -3,9 +3,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class MagicSquareDriver {
+/**public class MagicSquareDriver {
     // When creating a file make sure that the command line is odd.
-    // Have some sort of try/catch statement for that?
 
     // First order of business: Create a MagicSquare object
 
@@ -27,5 +26,6 @@ public class MagicSquareDriver {
             }
         
         }
+        // Have it run MagicSquare here.
     }
-}
+}*/
