@@ -1,47 +1,114 @@
 import java.util.Scanner;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 public class MagicSquare implements MagicSquareInterface{
 
-    File file = new File(filename);
-    PrintWriter outfile = new PrintWriter(file);
+    
     Boolean magicSquare = true;
+    int dimension;
+    int[][] placeholderArray = new int[dimension][dimension];
 
-    public void MagicSquare(File "*.txt"){
+
+    public MagicSquare(String filename){
+            readMatrix(filename);
+    }
+    
+    private int[][] readMatrix(String filename){
+        int[][] tempMatrix = null;
         try {
-            
-        } catch (Exception e) {
-            System.out.println("INVALID FILE FORMAT/FILE UNABLE TO BE OPENED!");
+            File file = new File(filename);
+            Scanner readFile = new Scanner(file);
+            dimension = readFile.nextInt();
+            tempMatrix = new int[dimension][dimension];
+            while(readFile.hasNextInt()){
+                for (int i = 0; i < dimension; i++) {
+                    for (int j = 0; j < dimension; j++) {
+                        tempMatrix[i][j] = readFile.nextInt();
+                    }
+                    
+                }
+            }
+            readFile.close();
+        } catch (FileNotFoundException e) {
+            //System.out.println("FILE CANNOT BE READ/INCORRECT FILE FORMAT");
+            throw e;
         }
-    } 
+        return tempMatrix;
+
+    }
+
+    public MagicSquare(String filename, int dimension){
+        int[][] newMatrix = new int[dimension][dimension];
+        int row = dimension - 1;
+        int col = dimension / 2;
+        int oldRow;
+        int oldCol;
+        for (int i = 0; i < Math.pow(dimension,2); i++) {
+            newMatrix[row][col] = i;
+            oldRow = row;
+            oldCol = col;
+            if(row == dimension){
+                row = 0;
+            }
+            if(col == dimension){
+                col = 0;
+            }
+            if(newMatrix[row][col] != 0){
+                row = oldRow;
+                col = oldCol;
+                row--;
+            }
+        }
+    }
+
+    private void writeMatrix(int[][] matrix, String filename){
+        try {
+            File file = new File(filename);
+            PrintWriter outfile = new PrintWriter(file);
+            outfile.println(matrix.length);
+            for (int i = 0; i < matrix.length; i++) {
+                for (int j = 0; j < matrix.length; j++) {
+                    outfile.print(matrix[i][j] + " ");
+                }
+                System.out.println();
+            }
+            
+            outfile.close();
+        } catch (IOException e) {
+            // TODO: handle exception
+            throw e;
+        }
+        
+    }
 
     @Override
     public boolean isMagicSquare() {
         int magicNum = 0;
         int totalNum = 0;
 
-        for (int row = 0; row < intArray[row]; row++) {
+        for (int row = 0; row < placeholderArray.length; row++) {
             if(magicSquare = false){
-                break;
+                return magicSquare;
             }
-            for (int col = 0; col < intArray[row][col]; col++) {
-            magicNum += intArray[row][col];
-            totalNum += intArray[row][col];
+            for (int col = 0; col < placeholderArray[row].length; col++) {
+            magicNum += placeholderArray[row][col];
+            totalNum += placeholderArray[row][col];
             }
             if(magicNum != magicNum * (Math.pow(magicNum,2) + 1) / 2){
                 magicSquare = false;
             }
         }
         magicNum = 0;
-        for (int col = 0; col < intArray[col]; col++) {
+        for (int col = 0; col < placeholderArray[0].length; col++) {
             if(magicSquare = false){
-                break;
+                return magicSquare;
             }
-            for (int row = 0; row < intArray[row][col]; row++) {
-            magicNum += intArray[row][col];
+            for (int row = 0; row < placeholderArray.length; row++) {
+            magicNum += placeholderArray[row][col];
             }
             if(magicNum != magicNum * (Math.pow(magicNum,2) + 1) / 2){
                 magicSquare = false;
@@ -49,31 +116,40 @@ public class MagicSquare implements MagicSquareInterface{
         }
         if(totalNum / magicNum == magicNum * (Math.pow(magicNum,2)+1)/2){ // This makes sure that ALL integers are correct.
             magicSquare = true;
+        }else{
+            magicSquare = false;
         }
+        return magicSquare;
     }
 
     @Override
     public int[][] getMatrix() {
-        //
-        throw new UnsupportedOperationException("Unimplemented method 'getMatrix'");
+        int[][] copyMatrix = new int[placeholderArray.length][placeholderArray.length];
+        for (int row = 0; row < placeholderArray.length; row++) {
+            for (int col = 0; col < placeholderArray[row].length; col++) {
+                copyMatrix[row][col] = placeholderArray[row][col];
+            }
+        }
+        return copyMatrix;
     }
 
     @Override // Use the given algorithm in the description of the assignment.
-    public String finalString() {
+    public String toString() {
         // returns a string showing the matrix and whether or not it was successful.
-        System.out.println("The matrix:");
+        String finalString = "The matrix:";
         // find a way to have this be printed out properly. Ask Kount Learning Center
-        for (int i = 0; placeholder[i][j]; i++){ // Iterate through each row and column, printing out each object.
-            System.out.print("\t");
+        for (int i = 0; i < placeholderArray.length; i++){ // Iterate through each row and column, printing out each object.
+            finalString += ("\t");
             for (int j = 0; j < placeholderArray[i][j]; j++) {
-                System.out.print(placeholderArray[i][j] + " ");
+                finalString += (placeholderArray[i][j] + " ");
             }
-            System.out.println();
+            finalString += "\n";
         }
         if(magicSquare = true){
-            System.out.println("is a magic square");
+            finalString += ("is a magic square.");
         }else{
-            System.out.println("is not a magic square");
+            finalString += ("is not a magic square.");
         }
+        return finalString;
     }
 }
