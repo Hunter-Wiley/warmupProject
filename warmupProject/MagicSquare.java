@@ -6,14 +6,27 @@ import java.io.PrintWriter;
 
 public class MagicSquare implements MagicSquareInterface{
 
-    int dimension;
-    int[][] magicSquareArray;
+    private int dimension;
+    private int[][] magicSquareArray = new int[dimension][dimension];
 
-
+    /**
+     * The priamary constructor for reading 2DArray information from
+     * a given filename, then printing it into the console.
+     * @param filename
+     * @throws FileNotFoundException
+     */
     public MagicSquare(String filename) throws FileNotFoundException{
-        magicSquareArray = readMatrix(filename);
+        this.magicSquareArray = readMatrix(filename);
     }
     
+    /**
+     * The readMatrix method's primary function is to be given a filename,
+     * then read the 2DArray information from that file to copy
+     * into a 2DArray that is returned for a constructor.
+     * @param filename
+     * @return
+     * @throws FileNotFoundException
+     */
     private int[][] readMatrix(String filename) throws FileNotFoundException{
         int[][] tempMatrix = null;
         try {
@@ -38,16 +51,28 @@ public class MagicSquare implements MagicSquareInterface{
 
     }
 
+    /**
+     * The MagicSquare constructor both calls upon
+     * the writeMatrix function, and also provides a mathematical
+     * formula for creating a Magic Square 2DArray, which is passed
+     * on to writeMatrix, along with a filename to be written to.
+     * @param filename
+     * @param dimension
+     * @throws IOException
+     */
     public MagicSquare(String filename, int dimension) throws IOException{
+        this.dimension = dimension;
         int[][] newMatrix = new int[dimension][dimension];
         int row = dimension - 1;
         int col = dimension / 2;
         int oldRow;
         int oldCol;
-        for (int i = 0; i < Math.pow(dimension,2); i++) {
+        for (int i = 1; i <= Math.pow(dimension,2); i++) {
             newMatrix[row][col] = i; // This keeps throwing an Index out of bounds error. Ask about it.
             oldRow = row;
             oldCol = col;
+            row++;
+            col++;
             if(row == dimension){
                 row = 0;
             }
@@ -59,10 +84,22 @@ public class MagicSquare implements MagicSquareInterface{
                 col = oldCol;
                 row--;
             }
+            if(row == -1){
+                row = oldRow;
+            }
         }
+        magicSquareArray = newMatrix;
         writeMatrix(newMatrix, filename);
     }
 
+    /**
+     * The writeMatrix method is used inside of a two parameter
+     * constructor, and it's primary purpose is to write information
+     * to a designated file provided by the constructor.
+     * @param matrix
+     * @param filename
+     * @throws IOException
+     */
     private void writeMatrix(int[][] matrix, String filename) throws IOException{
         try {
             File file = new File(filename);
@@ -70,31 +107,30 @@ public class MagicSquare implements MagicSquareInterface{
             outfile.println(matrix.length);
             for (int i = 0; i < matrix.length; i++) {
                 for (int j = 0; j < matrix.length; j++) {
-                    outfile.print(matrix[i][j] + " ");
+                    outfile.print(matrix[i][j] + "\t");
                 }
-                System.out.println();
+                outfile.println();
             }
-            
             outfile.close();
         } catch (IOException e) {
             System.out.println("INCORRECT INPUT OUTPUT!");
-            //throw e;
+            throw e;
         }
         
     }
 
     @Override
-    public boolean isMagicSquare() {
+    public boolean isMagicSquare(){
         int prevElement = 0;
         double magicNum = 0;
         Boolean magicSquare = true;
-        double trueMagicNum = dimension * (Math.pow(dimension,2) + 1) / 2; // Used to simplify boolean validation.
+        double trueMagicNum = dimension * (Math.pow(dimension,2) + 1) / 2;
         for (int row = 0; row < magicSquareArray.length; row++) {
             if(magicSquare == false){
                 return magicSquare;
             }
             for (int col = 0; col < magicSquareArray[row].length; col++) {
-                if(prevElement != magicSquareArray[row][col]){ // Checks to see if current element is equal to previous element.
+                if(prevElement != magicSquareArray[row][col]){
                     magicNum += magicSquareArray[row][col];
                     prevElement = magicSquareArray[row][col];
                 }else{
@@ -113,7 +149,7 @@ public class MagicSquare implements MagicSquareInterface{
         magicNum = 0;
         for (int col = 0; col < magicSquareArray.length; col++) {
             if(magicSquare == false){
-                return magicSquare;
+                return magicSquare;  
             }
             for (int row = 0; row < magicSquareArray.length; row++) {
             magicNum += magicSquareArray[row][col];
@@ -126,11 +162,40 @@ public class MagicSquare implements MagicSquareInterface{
             }
             magicNum = 0;
         }
+        for (int i = 0; i < magicSquareArray.length; i++){
+            if(magicSquare == false){
+                return magicSquare;  
+            }
+            magicNum += magicSquareArray[i][i];
+            if(magicNum != trueMagicNum){
+                magicSquare = false;
+            }
+            if(magicNum == trueMagicNum){
+                magicSquare = true;
+            }
+            magicNum = 0;
+        }
+        int j = 0;
+        for (int i = dimension - 1; i > -1; i--){
+            if(magicSquare == false){
+                return magicSquare;  
+            }
+            magicNum += magicSquareArray[i][j];
+            j++;
+            if(magicNum != trueMagicNum){
+                magicSquare = false;
+            }
+            if(magicNum == trueMagicNum){
+                magicSquare = true;
+            }
+            magicNum = 0;
+        }
         return magicSquare;
     }
 
     @Override
-    public int[][] getMatrix() {
+    public int[][] getMatrix(){
+        dimension = magicSquareArray.length;
         int[][] copyMatrix = new int[dimension][dimension];
         for (int row = 0; row < magicSquareArray.length; row++) {
             for (int col = 0; col < magicSquareArray[row].length; col++) {
@@ -142,10 +207,9 @@ public class MagicSquare implements MagicSquareInterface{
 
     @Override
     public String toString() {
-        // returns a string showing the matrix and whether or not it was successful.
         String finalString = "The matrix\n";
-        for (int i = 0; i < magicSquareArray.length; i++){ // Iterate through each row and column, printing out each object.
-            finalString += ("\t"); // Used for proper formatting
+        for (int i = 0; i < magicSquareArray.length; i++){
+            finalString += ("\t");
             for (int j = 0; j < magicSquareArray[i].length; j++) {
                 finalString += (magicSquareArray[i][j] + " ");
             }
