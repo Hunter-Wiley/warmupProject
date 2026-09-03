@@ -85,16 +85,22 @@ public class MagicSquare implements MagicSquareInterface{
 
     @Override
     public boolean isMagicSquare() {
+        int prevElement = 0;
         double magicNum = 0;
         Boolean magicSquare = true;
-        double trueMagicNum = dimension * (Math.pow(dimension,2) + 1) / 2; // Check to see if there are any duplicate #s.
+        double trueMagicNum = dimension * (Math.pow(dimension,2) + 1) / 2; // Used to simplify boolean validation.
         for (int row = 0; row < magicSquareArray.length; row++) {
             if(magicSquare == false){
                 return magicSquare;
             }
             for (int col = 0; col < magicSquareArray[row].length; col++) {
-                magicNum += magicSquareArray[row][col];
-                
+                if(prevElement != magicSquareArray[row][col]){ // Checks to see if current element is equal to previous element.
+                    magicNum += magicSquareArray[row][col];
+                    prevElement = magicSquareArray[row][col];
+                }else{
+                    magicSquare = false;
+                    break;
+                }
             }
             if(magicNum != trueMagicNum){
                 magicSquare = false;
