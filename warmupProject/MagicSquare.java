@@ -6,14 +6,12 @@ import java.io.PrintWriter;
 
 public class MagicSquare implements MagicSquareInterface{
 
-    
-    Boolean magicSquare = true; // For some reason this is being used for the toString method.
     int dimension;
-    int[][] placeholderArray;
+    int[][] magicSquareArray;
 
 
     public MagicSquare(String filename) throws FileNotFoundException{
-            placeholderArray = readMatrix(filename);
+        magicSquareArray = readMatrix(filename);
     }
     
     private int[][] readMatrix(String filename) throws FileNotFoundException{
@@ -47,7 +45,7 @@ public class MagicSquare implements MagicSquareInterface{
         int oldRow;
         int oldCol;
         for (int i = 0; i < Math.pow(dimension,2); i++) {
-            newMatrix[row][col] = i;
+            newMatrix[row][col] = i; // This keeps throwing an Index out of bounds error. Ask about it.
             oldRow = row;
             oldCol = col;
             if(row == dimension){
@@ -87,35 +85,37 @@ public class MagicSquare implements MagicSquareInterface{
 
     @Override
     public boolean isMagicSquare() {
-        int magicNum = 0;
-
-        for (int row = 0; row < placeholderArray.length; row++) {
+        double magicNum = 0;
+        Boolean magicSquare = true;
+        double trueMagicNum = dimension * (Math.pow(dimension,2) + 1) / 2; // Check to see if there are any duplicate #s.
+        for (int row = 0; row < magicSquareArray.length; row++) {
             if(magicSquare == false){
                 return magicSquare;
             }
-            for (int col = 0; col < placeholderArray[row].length; col++) {
-            magicNum += placeholderArray[row][col];
+            for (int col = 0; col < magicSquareArray[row].length; col++) {
+                magicNum += magicSquareArray[row][col];
+                
             }
-            if(magicNum != dimension * (Math.pow(dimension,2) + 1) / 2){
+            if(magicNum != trueMagicNum){
                 magicSquare = false;
             }
-            if(magicNum == dimension * (Math.pow(dimension,2) + 1) / 2){
+            if(magicNum == trueMagicNum){
                 magicSquare = true;
             }
             magicNum = 0;
         }
         magicNum = 0;
-        for (int col = 0; col < placeholderArray.length; col++) {
+        for (int col = 0; col < magicSquareArray.length; col++) {
             if(magicSquare == false){
                 return magicSquare;
             }
-            for (int row = 0; row < placeholderArray.length; row++) {
-            magicNum += placeholderArray[row][col];
+            for (int row = 0; row < magicSquareArray.length; row++) {
+            magicNum += magicSquareArray[row][col];
             }
-            if(magicNum != dimension * (Math.pow(dimension,2) + 1) / 2){
+            if(magicNum != trueMagicNum){
                 magicSquare = false;
             }
-            if(magicNum == dimension * (Math.pow(dimension,2) + 1) / 2){
+            if(magicNum == trueMagicNum){
                 magicSquare = true;
             }
             magicNum = 0;
@@ -126,28 +126,27 @@ public class MagicSquare implements MagicSquareInterface{
     @Override
     public int[][] getMatrix() {
         int[][] copyMatrix = new int[dimension][dimension];
-        for (int row = 0; row < placeholderArray.length; row++) {
-            for (int col = 0; col < placeholderArray[row].length; col++) {
-                copyMatrix[row][col] = placeholderArray[row][col];
+        for (int row = 0; row < magicSquareArray.length; row++) {
+            for (int col = 0; col < magicSquareArray[row].length; col++) {
+                copyMatrix[row][col] = magicSquareArray[row][col];
             }
         }
         return copyMatrix;
     }
 
-    @Override // Use the given algorithm in the description of the assignment.
+    @Override
     public String toString() {
         // returns a string showing the matrix and whether or not it was successful.
         String finalString = "The matrix\n";
-        // find a way to have this be printed out properly. Ask Kount Learning Center
-        for (int i = 0; i < placeholderArray.length; i++){ // Iterate through each row and column, printing out each object.
-            finalString += ("\t");
-            for (int j = 0; j < placeholderArray[i].length; j++) {
-                finalString += (placeholderArray[i][j] + " ");
+        for (int i = 0; i < magicSquareArray.length; i++){ // Iterate through each row and column, printing out each object.
+            finalString += ("\t"); // Used for proper formatting
+            for (int j = 0; j < magicSquareArray[i].length; j++) {
+                finalString += (magicSquareArray[i][j] + " ");
             }
             finalString += "\n";
         }
-        isMagicSquare(); // This allows for some fixes, but not all.
-        if(magicSquare == true){ // This is always coming back true, something in isMagicSquare is not changing the variable for magicSquare to false.
+        boolean magicSquare =  isMagicSquare();
+        if(magicSquare == true){
             finalString += ("is a magic square.");
         }
         if(magicSquare == false){
