@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 public class MagicSquare implements MagicSquareInterface{
 
     
-    Boolean magicSquare = true;
+    Boolean magicSquare = true; // For some reason this is being used for the toString method.
     int dimension;
     int[][] placeholderArray;
 
@@ -99,6 +99,10 @@ public class MagicSquare implements MagicSquareInterface{
             if(magicNum != dimension * (Math.pow(dimension,2) + 1) / 2){
                 magicSquare = false;
             }
+            if(magicNum == dimension * (Math.pow(dimension,2) + 1) / 2){
+                magicSquare = true;
+            }
+            magicNum = 0;
         }
         magicNum = 0;
         for (int col = 0; col < placeholderArray.length; col++) {
@@ -111,6 +115,10 @@ public class MagicSquare implements MagicSquareInterface{
             if(magicNum != dimension * (Math.pow(dimension,2) + 1) / 2){
                 magicSquare = false;
             }
+            if(magicNum == dimension * (Math.pow(dimension,2) + 1) / 2){
+                magicSquare = true;
+            }
+            magicNum = 0;
         }
         return magicSquare;
     }
@@ -138,7 +146,8 @@ public class MagicSquare implements MagicSquareInterface{
             }
             finalString += "\n";
         }
-        if(magicSquare == true){
+        isMagicSquare(); // This allows for some fixes, but not all.
+        if(magicSquare == true){ // This is always coming back true, something in isMagicSquare is not changing the variable for magicSquare to false.
             finalString += ("is a magic square.");
         }
         if(magicSquare == false){
